@@ -30,6 +30,7 @@ import PromotionCreate from './app/promotions/promotion-create';
 import PromotionUpdate from './app/promotions/promotion-update';
 import Reviews from './app/reviews';
 import SettingsPayments from './app/settings/payments';
+import SettingsEmail from './app/settings/email';
 import SettingsTaxes from './app/settings/taxes';
 import Shipping from './app/settings/shipping';
 import ShippingZone from './app/settings/shipping/shipping-zone';
@@ -154,6 +155,12 @@ const getStorePages = () => {
 			configKey: 'woocommerce/extension-settings-tax',
 			documentTitle: translate( 'Tax Settings' ),
 			path: '/store/settings/taxes/:site',
+		},
+		{
+			container: SettingsEmail,
+			configKey: 'woocommerce/extension-settings-email',
+			documentTitle: translate( 'Email' ),
+			path: '/store/settings/email/:site',
 		},
 	];
 };
