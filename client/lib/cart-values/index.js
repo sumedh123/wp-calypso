@@ -144,6 +144,8 @@ function isPaymentMethodEnabled( cart, method ) {
 			return isCreditCardPaymentsEnabled( cart );
 		case 'paypal':
 			return isPayPalExpressEnabled( cart );
+		case 'ideal':
+			return isNetherlandsIdealEnabled( cart );
 		default:
 			return false;
 	}
@@ -154,10 +156,13 @@ function isCreditCardPaymentsEnabled( cart ) {
 }
 
 function isPayPalExpressEnabled( cart ) {
-	return (
-		config.isEnabled( 'upgrades/paypal' ) &&
-		0 <= cart.allowed_payment_methods.indexOf( 'WPCOM_Billing_PayPal_Express' )
-	);
+	return config.isEnabled( 'upgrades/paypal' ) &&
+		cart.allowed_payment_methods.indexOf( 'WPCOM_Billing_PayPal_Express' ) >= 0;
+}
+
+function isNetherlandsIdealEnabled( cart ) {
+	return config.isEnabled( 'upgrades/netherlands-ideal' ) &&
+		cart.allowed_payment_methods.indexOf( 'WPCOM_Billing_Stripe_Source_Ideal' ) >= 0;
 }
 
 export default {
@@ -173,5 +178,6 @@ export default {
 	isPaidForFullyInCredits,
 	isPaymentMethodEnabled,
 	isPayPalExpressEnabled,
-	isCreditCardPaymentsEnabled,
+	isNetherlandsIdealEnabled,
+	isCreditCardPaymentsEnabled
 };

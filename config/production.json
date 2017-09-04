@@ -111,6 +111,7 @@
 		"upgrades/credit-cards": true,
 		"upgrades/domain-search": true,
 		"upgrades/in-app-purchase": false,
+		"upgrades/netherlands-ideal": false,
 		"upgrades/paypal": true,
 		"upgrades/premium-themes": true,
 		"upgrades/removal-survey": true,
