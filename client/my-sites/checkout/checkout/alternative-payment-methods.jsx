@@ -3,6 +3,7 @@
  */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { filter } from 'lodash';
 
 /**
  * Internal dependencies
@@ -85,17 +86,23 @@ class AlternativePaymentMethods extends PureComponent {
 		);
 	}
 
+	getContent() {
+		return this.props.paymentMethods.map( method => {
+			return this.paymentMethod( method );
+		} );
+	}
+
 	render() {
-		if ( ! this.props.paymentMethods ) {
+		const content = filter( this.getContent() );
+
+		if ( ! content.length ) {
 			return null;
 		}
 
 		return (
 			<div className="checkout__alternative-payment-methods">
 				<span>{ translate( 'Or pay with:' ) }</span>
-				{ this.props.paymentMethods.map( method => {
-					return this.paymentMethod( method );
-				} ) }
+				{ content }
 			</div>
 		);
 	}
