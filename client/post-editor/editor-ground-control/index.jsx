@@ -320,12 +320,12 @@ export class EditorGroundControl extends PureComponent {
 						) }
 					</div>
 				) }
-				{ hasRevisions && (
+				{ hasRevisions &&
 					<HistoryButton
 						selectRevision={ this.props.selectRevision }
 						setNestedSidebar={ this.props.setNestedSidebar }
 					/>
-				) }
+				}
 				{ this.renderGroundControlActionButtons() }
 			</Card>
 		);
