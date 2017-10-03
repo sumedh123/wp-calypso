@@ -1,21 +1,20 @@
+/** @format */
 /**
  * External dependencies
- *
- * @format
  */
-
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { identity, noop } from 'lodash';
+import { get, identity, noop } from 'lodash';
 import moment from 'moment';
 import page from 'page';
 import i18n, { localize } from 'i18n-calypso';
+import Gridicon from 'gridicons';
 
 /**
  * Internal dependencies
  */
+import { isEnabled } from 'config';
 import Card from 'components/card';
-import Gridicon from 'gridicons';
 import Site from 'blocks/site';
 import postUtils from 'lib/posts/utils';
 import siteUtils from 'lib/site/utils';
@@ -27,6 +26,7 @@ import {
 	NESTED_SIDEBAR_REVISIONS,
 	NestedSidebarPropType,
 } from 'post-editor/editor-sidebar/constants';
+import HistoryButton from 'post-editor/editor-ground-control/history-button';
 
 export class EditorGroundControl extends PureComponent {
 	static propTypes = {
@@ -261,6 +261,8 @@ export class EditorGroundControl extends PureComponent {
 		const { isSaving, translate } = this.props;
 		const isSaveEnabled = this.isSaveEnabled();
 		const shouldShowStatusLabel = this.shouldShowStatusLabel();
+		const hasRevisions =
+			isEnabled( 'post-editor/revisions' ) && get( this.props.post, 'revisions.length' );
 
 		return (
 			<Card className="editor-ground-control">
@@ -317,6 +319,12 @@ export class EditorGroundControl extends PureComponent {
 							</span>
 						) }
 					</div>
+				) }
+				{ hasRevisions && (
+					<HistoryButton
+						selectRevision={ this.props.selectRevision }
+						setNestedSidebar={ this.props.setNestedSidebar }
+					/>
 				) }
 				{ this.renderGroundControlActionButtons() }
 			</Card>
