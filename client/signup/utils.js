@@ -130,17 +130,20 @@ function getDestination( destination, dependencies, flowName ) {
 	return flows.filterDestination( destination, dependencies, flowName );
 }
 
-export default {
-	getFlowName: getFlowName,
-	getFlowSteps: getFlowSteps,
-	getStepName: getStepName,
-	getLocale: getLocale,
-	getStepSectionName: getStepSectionName,
-	getStepUrl: getStepUrl,
-	getValidPath: getValidPath,
-	getPreviousStepName: getPreviousStepName,
-	getNextStepName: getNextStepName,
-	getValueFromProgressStore: getValueFromProgressStore,
-	getDestination: getDestination,
-	mergeFormWithValue: mergeFormWithValue,
+const exported = {
+    getFlowName: getFlowName,
+    getFlowSteps: getFlowSteps,
+    getStepName: getStepName,
+    getLocale: getLocale,
+    getStepSectionName: getStepSectionName,
+    getStepUrl: getStepUrl,
+    getValidPath: getValidPath,
+    getPreviousStepName: getPreviousStepName,
+    getNextStepName: getNextStepName,
+    getValueFromProgressStore: getValueFromProgressStore,
+    getDestination: getDestination,
+    mergeFormWithValue: mergeFormWithValue
 };
+
+export default exported;
+export { getFlowName, getFlowSteps, getStepName, getLocale, getStepSectionName, getStepUrl, getValidPath, getPreviousStepName, getNextStepName, getValueFromProgressStore, getDestination, mergeFormWithValue };
