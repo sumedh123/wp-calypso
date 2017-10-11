@@ -58,7 +58,7 @@ export default function() {
 
 	if ( config.isEnabled( 'manage/site-settings/disconnect-flow' ) ) {
 		page(
-			'/settings/disconnect-site/:site_id',
+			'/settings/disconnect-site/:site_id/:reason?',
 			mySitesController.siteSelection,
 			settingsController.setScroll,
 			controller.disconnectSite

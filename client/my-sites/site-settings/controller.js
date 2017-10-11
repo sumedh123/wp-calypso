@@ -110,7 +110,7 @@ const controller = {
 
 	disconnectSite( context ) {
 		ReactDom.unmountComponentAtNode( document.getElementById( 'secondary' ) );
-		renderPage( context, <DisconnectSite /> );
+		renderPage( context, <DisconnectSite reason={ context.params.reason } /> );
 	},
 
 	startOver( context ) {
