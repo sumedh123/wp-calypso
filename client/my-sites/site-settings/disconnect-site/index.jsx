@@ -51,8 +51,10 @@ const DisconnectSite = ( { reason, siteSlug, translate } ) => {
 					) }
 				/>
 				<ReasonComponent confirmHref={ confirmHref } />
-				<NavigationLink href={ backHref } direction="back" />
-				<NavigationLink href={ confirmHref } direction="forward" />
+				<div className="disconnect-site__navigation-links">
+					<NavigationLink href={ backHref } direction="back" />
+					<NavigationLink href={ confirmHref } direction="forward" />
+				</div>
 			</Main>
 		</div>
 	);
