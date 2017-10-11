@@ -1,18 +1,17 @@
+/** @format */
 /**
  * External dependencies
- *
- * @format
  */
-
 import classNames from 'classnames';
 import React from 'react';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
+
 /**
  * Internal dependencies
  */
-import { setChatMessage } from 'state/happychat/actions';
 import { sendChatMessage } from 'state/happychat/connection/actions';
+import { setChatMessage } from 'state/happychat/chat/actions';
 import { canUserSendMessages } from 'state/happychat/selectors';
 import { when, forEach, compose, propEquals, call, prop } from './functional';
 import scrollbleed from './scrollbleed';
