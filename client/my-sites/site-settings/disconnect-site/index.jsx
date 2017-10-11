@@ -33,6 +33,7 @@ const DisconnectSite = ( { reason, siteSlug, translate } ) => {
 	}
 
 	const ReasonComponent = get( reasonComponents, reason, DisconnectSurvey );
+	const confirmHref = '/settings/manage-connection/' + siteSlug + '/confirm';
 
 	let backHref = '/settings/manage-connection/' + siteSlug;
 	if ( reason ) {
@@ -49,9 +50,9 @@ const DisconnectSite = ( { reason, siteSlug, translate } ) => {
 						"We'd love to know why you're disconnecting -- it will help us improve Jetpack."
 					) }
 				/>
-				<ReasonComponent />
+				<ReasonComponent confirmHref={ confirmHref } />
 				<NavigationLink href={ backHref } direction="back" />
-				<NavigationLink direction="forward" />
+				<NavigationLink href={ confirmHref } direction="forward" />
 			</Main>
 		</div>
 	);

@@ -21,13 +21,17 @@ import {
 	PLAN_JETPACK_BUSINESS,
 } from 'lib/plans/constants';
 
-const TooDifficult = ( { features, siteId, translate } ) => (
+const TooDifficult = ( { confirmHref, features, siteId, translate } ) => (
 	<div>
 		<QuerySitePlans siteId={ siteId } />
 		<Card className="disconnect-site__question">
 			{ translate( 'Which feature or service caused you problems?' ) }
 		</Card>
-		{ map( features, ( label, slug ) => <CompactCard key={ slug }>{ label }</CompactCard> ) }
+		{ map( features, ( label, slug ) => (
+			<CompactCard key={ slug } href={ confirmHref }>
+				{ label }
+			</CompactCard>
+		) ) }
 	</div>
 );
 

@@ -11,13 +11,15 @@ import { localize } from 'i18n-calypso';
 import Button from 'components/button';
 import Card from 'components/card';
 
-const TooExpensive = ( { translate } ) => (
+const TooExpensive = ( { confirmHref, translate } ) => (
 	<div>
 		<Card className="disconnect-site__question">
 			<p>{ translate( 'Would you like to downgrade your plan?' ) }</p>
 			<div>
 				<Button compact>Yes</Button>
-				<Button compact>No</Button>
+				<Button compact href={ confirmHref }>
+					No
+				</Button>
 			</div>
 		</Card>
 	</div>
