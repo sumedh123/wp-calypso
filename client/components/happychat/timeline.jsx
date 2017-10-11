@@ -1,16 +1,14 @@
+/** @format */
 /**
- * 	External dependencies
- *
- * @format
+ * External dependencies
  */
-
 import React from 'react';
 import classnames from 'classnames';
 import { assign, isArray, isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 
 /**
- *	Internal dependencies
+ * Internal dependencies
  */
 import { first, when, forEach } from './functional';
 import autoscroll from './autoscroll';
@@ -18,8 +16,8 @@ import Emojify from 'components/emojify';
 import scrollbleed from './scrollbleed';
 import { translate } from 'i18n-calypso';
 import { getCurrentUser } from 'state/current-user/selectors';
-import { getHappychatTimeline } from 'state/happychat/selectors';
 import getHappychatConnectionStatus from 'state/happychat/selectors/get-happychat-connection-status';
+import getHappychatTimeline from 'state/happychat/selectors/get-happychat-timeline';
 import { isExternal, addSchemeIfMissing, setUrlScheme } from 'lib/url';
 
 import debugFactory from 'debug';
