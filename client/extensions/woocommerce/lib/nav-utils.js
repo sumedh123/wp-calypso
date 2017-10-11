@@ -16,3 +16,4 @@ const navUtils = {
 };
 
 export default navUtils;
+export const getLink = navUtils.getLink;
