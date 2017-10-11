@@ -131,19 +131,32 @@ function getDestination( destination, dependencies, flowName ) {
 }
 
 const exported = {
-    getFlowName: getFlowName,
-    getFlowSteps: getFlowSteps,
-    getStepName: getStepName,
-    getLocale: getLocale,
-    getStepSectionName: getStepSectionName,
-    getStepUrl: getStepUrl,
-    getValidPath: getValidPath,
-    getPreviousStepName: getPreviousStepName,
-    getNextStepName: getNextStepName,
-    getValueFromProgressStore: getValueFromProgressStore,
-    getDestination: getDestination,
-    mergeFormWithValue: mergeFormWithValue
+	getFlowName: getFlowName,
+	getFlowSteps: getFlowSteps,
+	getStepName: getStepName,
+	getLocale: getLocale,
+	getStepSectionName: getStepSectionName,
+	getStepUrl: getStepUrl,
+	getValidPath: getValidPath,
+	getPreviousStepName: getPreviousStepName,
+	getNextStepName: getNextStepName,
+	getValueFromProgressStore: getValueFromProgressStore,
+	getDestination: getDestination,
+	mergeFormWithValue: mergeFormWithValue,
 };
 
 export default exported;
-export { getFlowName, getFlowSteps, getStepName, getLocale, getStepSectionName, getStepUrl, getValidPath, getPreviousStepName, getNextStepName, getValueFromProgressStore, getDestination, mergeFormWithValue };
+export {
+	getFlowName,
+	getFlowSteps,
+	getStepName,
+	getLocale,
+	getStepSectionName,
+	getStepUrl,
+	getValidPath,
+	getPreviousStepName,
+	getNextStepName,
+	getValueFromProgressStore,
+	getDestination,
+	mergeFormWithValue,
+};
