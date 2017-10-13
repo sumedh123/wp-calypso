@@ -15,7 +15,7 @@ import {
 	DESERIALIZE,
 	HAPPYCHAT_SEND_MESSAGE,
 	HAPPYCHAT_SET_MESSAGE,
-	HAPPYCHAT_RECEIVE_EVENT,
+	HAPPYCHAT_IO_RECEIVE_MESSAGE,
 	HAPPYCHAT_BLUR,
 	HAPPYCHAT_FOCUS,
 	HAPPYCHAT_SET_CHAT_STATUS,
@@ -38,20 +38,20 @@ import connection from './connection/reducer';
  */
 const timeline_event = ( state = {}, action ) => {
 	switch ( action.type ) {
-		case HAPPYCHAT_RECEIVE_EVENT:
-			const event = action.event;
+		case HAPPYCHAT_IO_RECEIVE_MESSAGE:
+			const msg = action.message;
 			return Object.assign(
 				{},
 				{
-					id: event.id,
-					source: event.source,
-					message: event.text,
-					name: event.user.name,
-					image: event.user.avatarURL,
-					timestamp: event.timestamp,
-					user_id: event.user.id,
-					type: get( event, 'type', 'message' ),
-					links: get( event, 'meta.links' ),
+					id: msg.id,
+					source: msg.source,
+					message: msg.text,
+					name: msg.user.name,
+					image: msg.user.avatarURL,
+					timestamp: msg.timestamp,
+					user_id: msg.user.id,
+					type: get( msg, 'type', 'message' ),
+					links: get( msg, 'meta.links' ),
 				}
 			);
 	}
@@ -79,9 +79,9 @@ const timeline = ( state = [], action ) => {
 				return state;
 			}
 			return [];
-		case HAPPYCHAT_RECEIVE_EVENT:
+		case HAPPYCHAT_IO_RECEIVE_MESSAGE:
 			// if meta.forOperator is set, skip so won't show to user
-			if ( get( action, 'event.meta.forOperator', false ) ) {
+			if ( get( action, 'message.meta.forOperator', false ) ) {
 				return state;
 			}
 			const event = timeline_event( {}, action );
@@ -167,7 +167,7 @@ const chatStatus = ( state = HAPPYCHAT_CHAT_STATUS_DEFAULT, action ) => {
 export const lastActivityTimestamp = ( state = null, action ) => {
 	switch ( action.type ) {
 		case HAPPYCHAT_SEND_MESSAGE:
-		case HAPPYCHAT_RECEIVE_EVENT:
+		case HAPPYCHAT_IO_RECEIVE_MESSAGE:
 			return Date.now();
 	}
 	return state;
