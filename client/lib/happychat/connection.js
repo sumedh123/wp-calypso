@@ -17,6 +17,7 @@ import {
 	receiveDisconnect,
 	receiveInit,
 	receiveMessage,
+	receiveToken,
 	receiveUnauthorized,
 	requestChatTranscript,
 	setConnecting,
@@ -45,7 +46,10 @@ class Connection {
 			// TODO: reject this promise
 			socket
 				.once( 'connect', () => debug( 'connected' ) )
-				.on( 'token', handler => handler( { signer_user_id, jwt, locale, groups } ) )
+				.on( 'token', handler => {
+					dispatch( receiveToken() );
+					handler( { signer_user_id, jwt, locale, groups } );
+				} )
 				.on( 'init', () => {
 					dispatch( receiveInit( { signer_user_id, locale, groups, geo_location } ) );
 					// TODO: There's no need to dispatch a separate action to request a transcript.
@@ -55,7 +59,7 @@ class Connection {
 				} )
 				.on( 'unauthorized', () => {
 					dispatch( receiveUnauthorized( 'User is not authorized' ) );
-					return socket.close();
+					socket.close();
 				} )
 				.on( 'disconnect', reason => dispatch( receiveDisconnect( reason ) ) )
 				.on( 'reconnecting', () => dispatch( receiveReconnecting() ) )
