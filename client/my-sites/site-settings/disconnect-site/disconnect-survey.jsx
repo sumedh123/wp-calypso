@@ -45,10 +45,10 @@ class DisconnectSurvey extends Component {
 						}
 					) }
 				</Card>
-				{ reasons.map( ( { label, slug } ) => (
+				{ reasons.map( ( { label, slug: reasonSlug } ) => (
 					<CompactCard
-						href={ `/settings/disconnect-site/${ siteSlug }/${ slug }` }
-						key={ slug }
+						href={ `/settings/disconnect-site/${ reasonSlug }/${ siteSlug }` }
+						key={ reasonSlug }
 						className="disconnect-site__survey-one"
 					>
 						{ label }
