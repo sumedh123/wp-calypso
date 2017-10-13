@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash';
  * Internal dependencies
  */
 import { setChatMessage } from 'state/happychat/actions';
-import { sendChatMessage } from 'state/happychat/connection/actions';
+import { sendChatMessage, sendNotTyping } from 'state/happychat/connection/actions';
 import { canUserSendMessages } from 'state/happychat/selectors';
 import { when, forEach, compose, propEquals, call, prop } from './functional';
 import scrollbleed from './scrollbleed';
@@ -30,8 +30,21 @@ export const Composer = React.createClass( {
 	mixins: [ scrollbleed ],
 
 	render() {
-		const { disabled, message, onUpdateChatMessage, onSendChatMessage, onFocus } = this.props;
-		const sendMessage = when( () => ! isEmpty( message ), () => onSendChatMessage( message ) );
+		const {
+			disabled,
+			message,
+			onUpdateChatMessage,
+			onSendChatMessage,
+			onSendNotTyping,
+			onFocus,
+		} = this.props;
+		const sendMessage = when(
+			() => ! isEmpty( message ),
+			() => {
+				onSendChatMessage( message );
+				onSendNotTyping( message );
+			}
+		);
 		const onChange = compose( prop( 'target.value' ), onUpdateChatMessage );
 		const onKeyDown = when( returnPressed, forEach( preventDefault, sendMessage ) );
 		const composerClasses = classNames( 'happychat__composer', {
@@ -77,6 +90,9 @@ const mapDispatch = dispatch => ( {
 	},
 	onSendChatMessage( message ) {
 		dispatch( sendChatMessage( message ) );
+	},
+	onSendNotTyping( message ) {
+		dispatch( sendNotTyping( message ) );
 	},
 } );
 

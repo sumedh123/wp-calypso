@@ -37,7 +37,7 @@ import {
 	ANALYTICS_EVENT_RECORD,
 	HAPPYCHAT_BLUR,
 	HAPPYCHAT_IO_SEND_MESSAGE_USERINFO,
-	HAPPYCHAT_SEND_MESSAGE,
+	HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE,
 	HAPPYCHAT_SET_MESSAGE,
 	HAPPYCHAT_TRANSCRIPT_RECEIVE,
 } from 'state/action-types';
@@ -252,9 +252,9 @@ describe( 'middleware', () => {
 		} );
 	} );
 
-	describe( 'HAPPYCHAT_SEND_MESSAGE action', () => {
+	describe( 'HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE action', () => {
 		test( 'should send the message through the connection and send a notTyping signal', () => {
-			const action = { type: HAPPYCHAT_SEND_MESSAGE, message: 'Hello world' };
+			const action = { type: HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE, message: 'Hello world' };
 			const connection = {
 				send: spy(),
 				notTyping: spy(),

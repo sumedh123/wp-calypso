@@ -13,7 +13,7 @@ import validator from 'is-my-json-valid';
 import {
 	SERIALIZE,
 	DESERIALIZE,
-	HAPPYCHAT_SEND_MESSAGE,
+	HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE,
 	HAPPYCHAT_SET_MESSAGE,
 	HAPPYCHAT_IO_RECEIVE_MESSAGE,
 	HAPPYCHAT_BLUR,
@@ -132,7 +132,7 @@ timeline.hasCustomPersistence = true;
  */
 export const message = ( state = '', action ) => {
 	switch ( action.type ) {
-		case HAPPYCHAT_SEND_MESSAGE:
+		case HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE:
 			return '';
 		case HAPPYCHAT_SET_MESSAGE:
 			return action.message;
@@ -166,7 +166,7 @@ const chatStatus = ( state = HAPPYCHAT_CHAT_STATUS_DEFAULT, action ) => {
 
 export const lastActivityTimestamp = ( state = null, action ) => {
 	switch ( action.type ) {
-		case HAPPYCHAT_SEND_MESSAGE:
+		case HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE:
 		case HAPPYCHAT_IO_RECEIVE_MESSAGE:
 			return Date.now();
 	}

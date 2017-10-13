@@ -43,6 +43,7 @@ import HelpUnverifiedWarning from '../help-unverified-warning';
 import {
 	sendChatMessage as sendHappychatMessage,
 	sendUserInfo,
+	sendNotTyping,
 } from 'state/happychat/connection/actions';
 import { openChat as openHappychat } from 'state/ui/happychat/actions';
 import {
@@ -149,6 +150,7 @@ const HelpContact = React.createClass( {
 
 		this.props.sendUserInfo( getUserInfo( { site, howCanWeHelp, howYouFeel } ) );
 		this.props.sendHappychatMessage( message );
+		this.props.sendNotTyping( message );
 
 		analytics.tracks.recordEvent( 'calypso_help_live_chat_begin', {
 			site_plan_product_id: site ? site.plan.product_id : null,
@@ -771,6 +773,7 @@ export default connect(
 		openHappychat,
 		sendHappychatMessage,
 		sendUserInfo,
+		sendNotTyping,
 		askDirectlyQuestion,
 		initializeDirectly,
 	}
