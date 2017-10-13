@@ -28,6 +28,7 @@ import debugFactory from 'debug';
 import cartValues, { isPaidForFullyInCredits, isFree, cartItems } from 'lib/cart-values';
 import Notice from 'components/notice';
 import { preventWidows } from 'lib/formatting';
+import PaymentBox from './payment-box';
 
 /**
  * Module variables
@@ -182,7 +183,8 @@ const SecurePaymentForm = React.createClass( {
 
 	renderCreditCardPaymentBox() {
 		return (
-			<CreditCardPaymentBox
+			<PaymentBox
+				selected="credit-card"
 				cards={ this.props.cards }
 				transaction={ this.props.transaction }
 				cart={ this.props.cart }
@@ -206,7 +208,8 @@ const SecurePaymentForm = React.createClass( {
 				selectedSite={ this.props.selectedSite }
 				paymentMethods={ this.props.paymentMethods }
 				onSelectPaymentMethod={ this.selectPaymentBox }
-				redirectTo={ this.props.redirectTo } />
+				redirectTo={ this.props.redirectTo }
+			/>
 		);
 	},
 
@@ -218,7 +221,8 @@ const SecurePaymentForm = React.createClass( {
 				paymentMethods={ this.props.paymentMethods }
 				paymentType={ paymentType }
 				onSelectPaymentMethod={ this.selectPaymentBox }
-				redirectTo={ this.props.redirectTo } />
+				redirectTo={ this.props.redirectTo }
+			/>
 		);
 	},
 
