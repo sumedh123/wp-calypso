@@ -4,7 +4,6 @@
  * @format
  */
 
-import classnames from 'classnames';
 import { localize } from 'i18n-calypso';
 import { assign, some } from 'lodash';
 import React from 'react';
@@ -150,14 +149,16 @@ export default localize(
 		},
 
 		content: function() {
-			const hasBusinessPlanInCart = some( this.props.cart.products, { product_slug: PLAN_BUSINESS } );
+			const hasBusinessPlanInCart = some( this.props.cart.products, {
+				product_slug: PLAN_BUSINESS,
+			} );
 			const showPaymentChatButton =
 				config.isEnabled( 'upgrades/presale-chat' ) &&
 				abtest( 'presaleChatButton' ) === 'showChatButton' &&
 				hasBusinessPlanInCart;
 
 			return (
-	            <form onSubmit={ this.redirectToPayPal }>
+				<form onSubmit={ this.redirectToPayPal }>
 					<div className="payment-box-section">
 						<CountrySelect
 							additionalClasses="checkout-field"
@@ -190,16 +191,25 @@ export default localize(
 							<button
 								type="submit"
 								className="button is-primary button-pay"
-					<AlternativePaymentMethods
-						cart={ this.props.cart }
-						paymentMethods={ this.props.paymentMethods }
-						selectedPaymentMethod="paypal"
-						onSelectPaymentMethod={ this.props.onSelectPaymentMethod }
+								disabled={ this.state.formDisabled }
+							>
+								{ this.renderButtonText() }
+							</button>
+
+							<SubscriptionText cart={ this.props.cart } />
+						</div>
+
+						<AlternativePaymentMethods
+							cart={ this.props.cart }
+							paymentMethods={ this.props.paymentMethods }
+							selectedPaymentMethod="paypal"
+							onSelectPaymentMethod={ this.props.onSelectPaymentMethod }
 						/>
 
-					{ showPaymentChatButton && (
-						<PaymentChatButton paymentType="paypal" cart={ this.props.cart } />
-					) }
+						{ showPaymentChatButton && (
+							<PaymentChatButton paymentType="paypal" cart={ this.props.cart } />
+						) }
+					</div>
 
 					<CartCoupon cart={ this.props.cart } />
 
