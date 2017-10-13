@@ -9,13 +9,17 @@ import { isEmpty, find, values } from 'lodash';
 /**
  * Internal dependencies
  */
-import { type as domainTypes } from './constants';
+import { type as domainTypes, transferStatus } from './constants';
 import { cartItems } from 'lib/cart-values';
 import { isDomainRegistration } from 'lib/products-values';
 
 function getDomainType( domainFromApi ) {
 	if ( domainFromApi.type === 'redirect' ) {
 		return domainTypes.SITE_REDIRECT;
+	}
+
+	if ( domainFromApi.type === 'transfer' ) {
+		return domainTypes.TRANSFER;
 	}
 
 	if ( domainFromApi.wpcom_domain ) {
@@ -27,6 +31,26 @@ function getDomainType( domainFromApi ) {
 	}
 
 	return domainTypes.MAPPED;
+}
+
+function getTransferStatus( domainFromApi ) {
+	if ( domainFromApi.transfer_status === 'pending_owner' ) {
+		return transferStatus.PENDING_OWNER;
+	}
+
+	if ( domainFromApi.transfer_status === 'pending_registry' ) {
+		return transferStatus.PENDING_REGISTRY;
+	}
+
+	if ( domainFromApi.transfer_status === 'cancelled' ) {
+		return transferStatus.CANCELLED;
+	}
+
+	if ( domainFromApi.transfer_status === 'completed' ) {
+		return transferStatus.COMPLETE;
+	}
+
+	return null;
 }
 
 /**
@@ -56,4 +80,4 @@ function getDomainNameFromReceiptOrCart( receipt, cart ) {
 	return null;
 }
 
-export { getDomainNameFromReceiptOrCart, getDomainType };
+export { getDomainNameFromReceiptOrCart, getDomainType, getTransferStatus };
