@@ -44,7 +44,7 @@ class SocialSignupForm extends Component {
 		// See https://github.com/google/google-api-javascript-client/issues/297#issuecomment-333869742
 		const isSafari =
 			typeof window !== 'undefined' && /^(?!.*chrome).*safari/i.test( window.navigator.userAgent );
-		return isPopup || isSafari;
+		return true; //isPopup || isSafari;
 	}
 
 	render() {
