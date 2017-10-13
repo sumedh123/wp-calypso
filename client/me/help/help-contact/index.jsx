@@ -29,6 +29,7 @@ import notices from 'notices';
 import analytics from 'lib/analytics';
 import { isOlarkTimedOut } from 'state/ui/olark/selectors';
 import { isCurrentUserEmailVerified } from 'state/current-user/selectors';
+import getUserInfo from 'state/happychat/selectors/get-user-info';
 import isHappychatAvailable from 'state/happychat/selectors/is-happychat-available';
 import {
 	isTicketSupportEligible,
@@ -146,7 +147,7 @@ const HelpContact = React.createClass( {
 		this.props.openHappychat();
 		const { howCanWeHelp, howYouFeel, message, site } = contactForm;
 
-		this.props.sendUserInfo( howCanWeHelp, howYouFeel, site );
+		this.props.sendUserInfo( getUserInfo( { site, howCanWeHelp, howYouFeel } ) );
 		this.props.sendHappychatMessage( message );
 
 		analytics.tracks.recordEvent( 'calypso_help_live_chat_begin', {
@@ -750,6 +751,7 @@ export default connect(
 			currentUserLocale: getCurrentUserLocale( state ),
 			currentUser: getCurrentUser( state ),
 			hasAskedADirectlyQuestion: hasUserAskedADirectlyQuestion( state ),
+			getUserInfo: getUserInfo( state ),
 			isDirectlyFailed: isDirectlyFailed( state ),
 			isDirectlyReady: isDirectlyReady( state ),
 			isDirectlyUninitialized: isDirectlyUninitialized( state ),

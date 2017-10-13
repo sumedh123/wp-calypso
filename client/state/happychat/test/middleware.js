@@ -36,7 +36,7 @@ import wpcom from 'lib/wp';
 import {
 	ANALYTICS_EVENT_RECORD,
 	HAPPYCHAT_BLUR,
-	HAPPYCHAT_SEND_USER_INFO,
+	HAPPYCHAT_IO_SEND_MESSAGE_USERINFO,
 	HAPPYCHAT_SEND_MESSAGE,
 	HAPPYCHAT_SET_MESSAGE,
 	HAPPYCHAT_TRANSCRIPT_RECEIVE,
@@ -99,7 +99,7 @@ describe( 'middleware', () => {
 		} );
 	} );
 
-	describe( 'HAPPYCHAT_SEND_USER_INFO action', () => {
+	describe( 'HAPPYCHAT_IO_SEND_MESSAGE_USERINFO action', () => {
 		const state = {
 			happychat: {
 				user: {
@@ -156,7 +156,7 @@ describe( 'middleware', () => {
 			const getState = () => state;
 			const connection = { sendInfo: spy() };
 			const action = {
-				type: HAPPYCHAT_SEND_USER_INFO,
+				type: HAPPYCHAT_IO_SEND_MESSAGE_USERINFO,
 				site: {
 					ID: 'siteId',
 					URL: 'siteUrl',
