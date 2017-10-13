@@ -14,8 +14,8 @@ import {
 	HAPPYCHAT_DISCONNECTED,
 	HAPPYCHAT_IO_RECEIVE_ACCEPT,
 	HAPPYCHAT_IO_RECEIVE_MESSAGE,
-	HAPPYCHAT_RECONNECTING,
-	HAPPYCHAT_SET_CHAT_STATUS,
+	HAPPYCHAT_IO_RECEIVE_RECONNECTING,
+	HAPPYCHAT_IO_RECEIVE_STATUS,
 	HAPPYCHAT_TRANSCRIPT_REQUEST,
 } from 'state/action-types';
 
@@ -95,7 +95,7 @@ describe( 'connection', ( ) => {
 
 		it( 'reconnecting event', ( done ) => {
 			openSocket.then( ( ) => {
-				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( { type: HAPPYCHAT_RECONNECTING } );
+				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( { type: HAPPYCHAT_IO_RECEIVE_RECONNECTING } );
 				done(); // tell mocha the promise chain ended
 			} );
 			socket.emit( 'init' ); // force openSocket promise to resolve
@@ -106,7 +106,7 @@ describe( 'connection', ( ) => {
 			const status = 'testing status';
 			openSocket.then( ( ) => {
 				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
-					type: HAPPYCHAT_SET_CHAT_STATUS,
+					type: HAPPYCHAT_IO_RECEIVE_STATUS,
 					status
 				} );
 				done(); // tell mocha the promise chain ended

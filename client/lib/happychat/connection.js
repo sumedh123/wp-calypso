@@ -19,9 +19,9 @@ import {
 	setConnected,
 	setConnecting,
 	setDisconnected,
-	setReconnecting,
+	receiveReconnecting,
 } from 'state/happychat/connection/actions';
-import { setHappychatChatStatus } from 'state/happychat/actions';
+import { receiveStatus } from 'state/happychat/actions';
 
 const debug = require( 'debug' )( 'calypso:happychat:connection' );
 
@@ -54,8 +54,8 @@ class Connection {
 				} )
 				.on( 'unauthorized', () => socket.close() )
 				.on( 'disconnect', reason => dispatch( setDisconnected( reason ) ) )
-				.on( 'reconnecting', () => dispatch( setReconnecting() ) )
-				.on( 'status', status => dispatch( setHappychatChatStatus( status ) ) )
+				.on( 'reconnecting', () => dispatch( receiveReconnecting() ) )
+				.on( 'status', status => dispatch( receiveStatus( status ) ) )
 				.on( 'accept', accept => dispatch( receiveAccept( accept ) ) )
 				.on( 'message', message => dispatch( receiveMessage( message ) ) );
 		} );

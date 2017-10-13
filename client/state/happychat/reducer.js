@@ -18,7 +18,7 @@ import {
 	HAPPYCHAT_IO_RECEIVE_MESSAGE,
 	HAPPYCHAT_BLUR,
 	HAPPYCHAT_FOCUS,
-	HAPPYCHAT_SET_CHAT_STATUS,
+	HAPPYCHAT_IO_RECEIVE_STATUS,
 	HAPPYCHAT_TRANSCRIPT_RECEIVE,
 } from 'state/action-types';
 import { combineReducers, isValidStateWithSchema } from 'state/utils';
@@ -158,7 +158,7 @@ export const message = ( state = '', action ) => {
  */
 const chatStatus = ( state = HAPPYCHAT_CHAT_STATUS_DEFAULT, action ) => {
 	switch ( action.type ) {
-		case HAPPYCHAT_SET_CHAT_STATUS:
+		case HAPPYCHAT_IO_RECEIVE_STATUS:
 			return action.status;
 	}
 	return state;

@@ -6,12 +6,12 @@
 import {
 	HAPPYCHAT_BLUR,
 	HAPPYCHAT_FOCUS,
-	HAPPYCHAT_SET_CHAT_STATUS,
+	HAPPYCHAT_IO_RECEIVE_STATUS,
 	HAPPYCHAT_SET_MESSAGE,
 } from 'state/action-types';
 
-export const setHappychatChatStatus = status => ( {
-	type: HAPPYCHAT_SET_CHAT_STATUS,
+export const receiveStatus = status => ( {
+	type: HAPPYCHAT_IO_RECEIVE_STATUS,
 	status,
 } );
 
