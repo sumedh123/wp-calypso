@@ -17,6 +17,7 @@ import {
 	receiveDisconnect,
 	receiveInit,
 	receiveMessage,
+	receiveUnauthorized,
 	requestChatTranscript,
 	setConnecting,
 	receiveReconnecting,
@@ -52,7 +53,10 @@ class Connection {
 					dispatch( requestChatTranscript() );
 					resolve( socket );
 				} )
-				.on( 'unauthorized', () => socket.close() )
+				.on( 'unauthorized', () => {
+					dispatch( receiveUnauthorized( 'User is not authorized' ) );
+					return socket.close();
+				} )
 				.on( 'disconnect', reason => dispatch( receiveDisconnect( reason ) ) )
 				.on( 'reconnecting', () => dispatch( receiveReconnecting() ) )
 				.on( 'status', status => dispatch( receiveStatus( status ) ) )
