@@ -39,7 +39,7 @@ import {
 	HAPPYCHAT_IO_SEND_MESSAGE_USERINFO,
 	HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE,
 	HAPPYCHAT_SET_MESSAGE,
-	HAPPYCHAT_TRANSCRIPT_RECEIVE,
+	HAPPYCHAT_IO_REQUEST_TRANSCRIPT_RECEIVE,
 } from 'state/action-types';
 import { useSandbox } from 'test/helpers/use-sinon';
 
@@ -280,7 +280,7 @@ describe( 'middleware', () => {
 		} );
 	} );
 
-	describe( 'HAPPYCHAT_TRANSCRIPT_REQUEST action', () => {
+	describe( 'HAPPYCHAT_IO_REQUEST_TRANSCRIPT_RECEIVE action', () => {
 		test( 'should fetch transcript from connection and dispatch receive action', () => {
 			const state = deepFreeze( {
 				happychat: {
@@ -300,7 +300,7 @@ describe( 'middleware', () => {
 				expect( connection.transcript ).to.have.been.called;
 
 				expect( dispatch ).to.have.been.calledWith( {
-					type: HAPPYCHAT_TRANSCRIPT_RECEIVE,
+					type: HAPPYCHAT_IO_REQUEST_TRANSCRIPT_RECEIVE,
 					...response,
 				} );
 			} );

@@ -13,6 +13,7 @@ import {
 	ANALYTICS_EVENT_RECORD,
 	HAPPYCHAT_CONNECT,
 	HAPPYCHAT_INITIALIZE,
+	HAPPYCHAT_IO_REQUEST_TRANSCRIPT,
 	HAPPYCHAT_IO_SEND_MESSAGE_EVENT,
 	HAPPYCHAT_IO_SEND_MESSAGE_LOG,
 	HAPPYCHAT_IO_SEND_MESSAGE_MESSAGE,
@@ -20,7 +21,6 @@ import {
 	HAPPYCHAT_IO_SEND_PREFERENCES,
 	HAPPYCHAT_IO_SEND_TYPING,
 	HAPPYCHAT_SET_MESSAGE,
-	HAPPYCHAT_TRANSCRIPT_REQUEST,
 	HELP_CONTACT_FORM_SITE_SELECT,
 	ROUTE_SET,
 	COMMENTS_CHANGE_STATUS,
@@ -41,7 +41,6 @@ import {
 	SITE_SETTINGS_SAVE_SUCCESS,
 } from 'state/action-types';
 import {
-	receiveChatTranscript,
 	sendEvent,
 	sendLog,
 	sendPreferences,
@@ -118,18 +117,6 @@ export const connectChat = ( connection, { getState, dispatch } ) => {
 		} )
 		.then( ( { jwt } ) => connection.init( url, dispatch, { jwt, ...happychatUser } ) )
 		.catch( e => debug( 'failed to start Happychat session', e, e.stack ) );
-};
-
-export const requestTranscript = ( connection, { dispatch } ) => {
-	debug( 'requesting current session transcript' );
-
-	// passing a null timestamp will request the latest session's transcript
-	return connection
-		.transcript( null )
-		.then(
-			result => dispatch( receiveChatTranscript( result.messages, result.timestamp ) ),
-			e => debug( 'failed to get transcript', e )
-		);
 };
 
 export const connectIfRecentlyActive = ( connection, store ) => {
@@ -276,14 +263,14 @@ export default function( connection = null ) {
 				connection.emit( action );
 				break;
 
+			case HAPPYCHAT_IO_REQUEST_TRANSCRIPT:
+				connection.request( action, 10000 );
+				break;
+
 			// Converts Happychat UI action => SocketIO action
 			case HAPPYCHAT_SET_MESSAGE:
 				const { message } = action;
 				isEmpty( message ) ? sendNotTyping() : sendThrottledTyping( message );
-				break;
-
-			case HAPPYCHAT_TRANSCRIPT_REQUEST:
-				requestTranscript( connection, store );
 				break;
 
 			// Converts Calypso action => SocketIO action

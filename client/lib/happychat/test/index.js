@@ -1,6 +1,9 @@
 /**
  * External dependencies
+ *
+ * @format
  */
+
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import { EventEmitter } from 'events';
@@ -16,13 +19,13 @@ import {
 	HAPPYCHAT_IO_RECEIVE_MESSAGE,
 	HAPPYCHAT_IO_RECEIVE_RECONNECTING,
 	HAPPYCHAT_IO_RECEIVE_STATUS,
-	HAPPYCHAT_TRANSCRIPT_REQUEST,
+	HAPPYCHAT_IO_REQUEST_TRANSCRIPT,
 } from 'state/action-types';
 
 import buildConnection from '../connection';
 
-describe( 'connection', ( ) => {
-	describe( 'should bind socket ', ( ) => {
+describe( 'connection', () => {
+	describe( 'should bind socket ', () => {
 		const signer_user_id = 12;
 		const jwt = 'jwt';
 		const locale = 'locale';
@@ -34,11 +37,17 @@ describe( 'connection', ( ) => {
 			socket = new EventEmitter();
 			dispatch = stub();
 			const connection = buildConnection();
-			openSocket = connection.init( socket, dispatch, { signer_user_id, jwt, locale, groups, geo_location } );
+			openSocket = connection.init( socket, dispatch, {
+				signer_user_id,
+				jwt,
+				locale,
+				groups,
+				geo_location,
+			} );
 		} );
 
-		it( 'connect event', ( done ) => {
-			openSocket.then( ( ) => {
+		it( 'connect event', done => {
+			openSocket.then( () => {
 				// TODO: implement when connect event is used
 				expect( true ).to.equal( true );
 				done(); // tell mocha the promise chain ended
@@ -47,9 +56,9 @@ describe( 'connection', ( ) => {
 			socket.emit( 'init' ); // force openSocket promise to resolve
 		} );
 
-		it( 'token event', ( done ) => {
+		it( 'token event', done => {
 			const callback = stub();
-			openSocket.then( ( ) => {
+			openSocket.then( () => {
 				expect( callback ).to.have.been.calledWithMatch( { signer_user_id, jwt, locale, groups } );
 				done(); // tell mocha the promise chain ended
 			} );
@@ -57,22 +66,24 @@ describe( 'connection', ( ) => {
 			socket.emit( 'init' ); // force openSocket promise to resolve
 		} );
 
-		it( 'init event', ( done ) => {
-			openSocket.then( ( ) => {
+		it( 'init event', done => {
+			openSocket.then( () => {
 				expect( dispatch.getCall( 0 ) ).to.have.been.calledWithMatch( { type: HAPPYCHAT_IO_INIT } );
 				expect( dispatch.getCall( 1 ) ).to.have.been.calledWithMatch( {
 					type: HAPPYCHAT_IO_RECEIVE_INIT,
-					user: { signer_user_id, locale, groups, geo_location }
+					user: { signer_user_id, locale, groups, geo_location },
 				} );
-				expect( dispatch.getCall( 2 ) ).to.have.been.calledWithMatch( { type: HAPPYCHAT_TRANSCRIPT_REQUEST } );
+				expect( dispatch.getCall( 2 ) ).to.have.been.calledWithMatch( {
+					type: HAPPYCHAT_IO_REQUEST_TRANSCRIPT,
+				} );
 				done(); // tell mocha the promise chain ended
 			} );
 			socket.emit( 'init' ); // force openSocket promise to resolve
 		} );
 
-		it( 'unauthorized event', ( done ) => {
-			socket.close = stub().returns( ()=>{} );
-			openSocket.then( ( ) => {
+		it( 'unauthorized event', done => {
+			socket.close = stub().returns( () => {} );
+			openSocket.then( () => {
 				expect( socket.close ).to.have.been.called;
 				done(); // tell mocha the promise chain ended
 			} );
@@ -80,12 +91,12 @@ describe( 'connection', ( ) => {
 			socket.emit( 'unauthorized' );
 		} );
 
-		it( 'disconnect event', ( done ) => {
+		it( 'disconnect event', done => {
 			const errorStatus = 'testing reasons';
-			openSocket.then( ( ) => {
+			openSocket.then( () => {
 				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
 					type: HAPPYCHAT_IO_RECEIVE_DISCONNECT,
-					errorStatus
+					errorStatus,
 				} );
 				done(); // tell mocha the promise chain ended
 			} );
@@ -93,21 +104,23 @@ describe( 'connection', ( ) => {
 			socket.emit( 'disconnect', errorStatus );
 		} );
 
-		it( 'reconnecting event', ( done ) => {
-			openSocket.then( ( ) => {
-				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( { type: HAPPYCHAT_IO_RECEIVE_RECONNECTING } );
+		it( 'reconnecting event', done => {
+			openSocket.then( () => {
+				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
+					type: HAPPYCHAT_IO_RECEIVE_RECONNECTING,
+				} );
 				done(); // tell mocha the promise chain ended
 			} );
 			socket.emit( 'init' ); // force openSocket promise to resolve
 			socket.emit( 'reconnecting' );
 		} );
 
-		it( 'status event', ( done ) => {
+		it( 'status event', done => {
 			const status = 'testing status';
-			openSocket.then( ( ) => {
+			openSocket.then( () => {
 				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
 					type: HAPPYCHAT_IO_RECEIVE_STATUS,
-					status
+					status,
 				} );
 				done(); // tell mocha the promise chain ended
 			} );
@@ -115,12 +128,12 @@ describe( 'connection', ( ) => {
 			socket.emit( 'status', status );
 		} );
 
-		it( 'accept event', ( done ) => {
+		it( 'accept event', done => {
 			const isAvailable = true;
-			openSocket.then( ( ) => {
+			openSocket.then( () => {
 				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
 					type: HAPPYCHAT_IO_RECEIVE_ACCEPT,
-					isAvailable
+					isAvailable,
 				} );
 				done(); // tell mocha the promise chain ended
 			} );
@@ -128,12 +141,12 @@ describe( 'connection', ( ) => {
 			socket.emit( 'accept', isAvailable );
 		} );
 
-		it( 'message event', ( done ) => {
+		it( 'message event', done => {
 			const message = 'testing msg';
-			openSocket.then( ( ) => {
+			openSocket.then( () => {
 				expect( dispatch.getCall( 3 ) ).to.have.been.calledWithMatch( {
 					type: HAPPYCHAT_IO_RECEIVE_MESSAGE,
-					message
+					message,
 				} );
 				done(); // tell mocha the promise chain ended
 			} );
