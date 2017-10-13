@@ -7,7 +7,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { localize } from 'i18n-calypso';
-import { debounce } from 'lodash';
+import { assign, debounce } from 'lodash';
 import { connect } from 'react-redux';
 
 /**
@@ -15,8 +15,8 @@ import { connect } from 'react-redux';
  */
 import Button from 'components/button';
 import Dialog from 'components/dialog';
-import EmbedViewManager from 'components/tinymce/plugins/wpcom-view/views/embed'
 import FormTextInput from 'components/forms/form-text-input';
+import wpcom from 'lib/wp';
 import { getSelectedSiteId } from 'state/ui/selectors';
 
 /*
@@ -45,59 +45,78 @@ export class EmbedDialog extends React.Component {
 		embedUrl: this.props.embedUrl,
 		previewUrl: this.props.embedUrl,
 		// might be nice if don't need a second field here, but i think it's introduce extra unnecessary render() calls if only used props.embedUrl
+			// might not be needed now that using previewMarkup
+
+		previewMarkup: [],
 	};
 
-	constructor( props ) {
-		super( ...arguments );
-
-		this.embedViewManager = new EmbedViewManager();
-		// maybe instead of creating a new manager, we should reuse the existing one?
-		// but how would that change anything? because the first one is still going to have registered its listeners etc
-		this.embedViewManager.updateSite( this.props.siteId );
-		this.embedView = this.embedViewManager.getComponent();
-	}
-
 	componentWillMount() {
+		/**
+		 * Update the preview of the new embed URL
+		 *
+		 * @todo: Making an API request directly is a bit of a hack. The ideal solution would be to
+		 *        reuse EmbedViewManager/EmbedView, but that leads to misery and resignation. When
+		 *        pasting
+		 *        a new URL into the input field, all instances of wpcom-views/embed on the screen
+		 *        would be refreshed, causing TinyMCE's selection to be unset. Because of that,
+		 *        the new URL would be inserted at the beginning of the editor body, rather than
+		 *        replacing the old URL. See `p1507898606000351-slack-delta-samus` for more details.
+		 */
 		this.debouncedUpdateEmbedPreview = debounce( function() {
-			this.embedViewManager.fetchEmbed( this.state.embedUrl );
-			// todo this causes the tinymce selection to be unset,
-			// which leads to the new embed url being inserted at the begining of the editor instead of replacing the old embed url
-
-			// ok, yeah, that's what's happening. when enter new url (before clicking update), it fetches the new embed,
-			// calls setmarkers(), BeforeSetContent handler, removeview() (and others in between)
-			// that happens for all the views on the page, not just the one in the modal that we want to update
-			// then they all get re-created, but the selection isn't restored to the new view in the modal, so it's falsy when we try to insert the new url
-			// and tinymce just sticks it at the begining
-
-			// we don't want all the views to be updated, b/c it causes a flash that the user sees.
-			// only want the view inside the modal updated
-			// if can make that happen, then that might avoid unsetting the selection too
-			// or at least it gets you closer to that point
-
-			// it might be ok that the view gets deselected, as long as its reselected later on - is that was `toSelect` is for?
-			// but maybe want to prevent it from getting deselected in the first place
-			// is it updating all of them b/c it emits a 'change' event that they're all subscribed to, or something else?
-			// try to narrow down exactly what triggers it
-
-			// could try to save a copy of this.props.editor.selection.getNode() before calling fetchEmbed, then
-			// restore it after, but that's not really addressing the real problem.
-			// also might not work b/c original node gets deleted during changes? might need to wait until fetchEmbed finished async process too
-
-
 			this.setState( { previewUrl: this.state.embedUrl } );
-				// maybe wait until fetchEmbed finishes to update the previewurl?
-				// test w/ throttled network connection to see if introduces race conditions
-
-			// show an error in the preview box if fetching the embed failed / it's an invalid URL
-				// right now it just continues showing the last valid preview
-				// don't wanna do if they're still typing though. debounce might be enough to fix that, but still could be annoying.
-				// need to play with
 
 			// maybe add a animated loading block so the user gets some visual feedback while they wait for the new embed to load
 				// throttle connection to see how bad/long it takes
-		}, 500 );
 
+
+			// Use cached data if it's available
+			if ( this.state.previewMarkup[ this.state.embedUrl ] ) {
+				return;
+			}
+
+			wpcom.undocumented().site( this.props.siteId ).embeds(
+				{ embed_url: this.state.embedUrl },
+				( error, data ) => {
+					//const { previewMarkup, embedUrl } = this.props;
+						// update to use ^^^ instead of writing out this.props each time
+
+					let cachedMarkup;
+
+					if ( data && data.result ) {
+						cachedMarkup = data.result;
+					} else {
+						console.log(error);
+							// add details? or just generic error message
+
+						cachedMarkup = 'error foo';
+
+						// todo handle errors (both in xhr in `error` and app layer in `data.error` or whatever
+						// make sure data.result exists and is valid
+						// unit tests for those. mock the xhr
+
+						// show an error in the preview box if fetching the embed failed / it's an invalid URL
+							// right now it just continues showing the last valid preview
+							// don't wanna do if they're still typing though. debounce might be enough to fix that, but still could be annoying.
+							// need to play with
+							//  how to detect from the markup if it was an error? it'll be dependent on the service etc, right?
+					}
+
+					this.setState( {
+						previewMarkup: assign(
+							this.state.previewMarkup,
+							{ [ this.state.embedUrl ]: cachedMarkup }
+						),
+						// merge or other function would be better than assign?
+					} );
+				}
+			);
+		}, 500 );
 		// this doesn't need to be inside compwillmount? can just be regular function below?
+
+		// Set the initial preview
+		this.debouncedUpdateEmbedPreview();
+		// maybe do this later in lifecycle?
+		// call it immediately instead of debouncing for 500ms?
 	}
 
 	/**
@@ -108,12 +127,25 @@ export class EmbedDialog extends React.Component {
 	 * `state.embedUrl` would equal the value of the first embed, since it initially set the
 	 * state.
 	 *
+	 * and previewurl for all the above. update ^^^
+	 *
 	 * @param {object} nextProps The properties that will be received.
 	 */
 	componentWillReceiveProps = nextProps => {
 		this.setState( {
 			embedUrl: nextProps.embedUrl,
+			previewUrl: nextProps.embedUrl,
+		}, () => {
+			// refresh the preview
+			this.debouncedUpdateEmbedPreview();
+				// call immediately instead of waiting for debounce
+				// maybe pass new value directly instead of waiting for setstate?
+				// only call if props.isvisible? otherwise calling when closing the dialog, which don't want
 		} );
+
+		// this whole flow is getting a little complicated.
+		// state is updated here, updated in the debounced function, maybe other places. and the functions are dependent on whether or not the state has been updated, etc.`
+		// try to simplify everything
 	};
 
 	onChangeEmbedUrl = event => {
@@ -175,16 +207,30 @@ export class EmbedDialog extends React.Component {
 					onKeyDown={ this.onKeyDownEmbedUrl }
 				/>
 
-				<this.embedView content={ this.state.previewUrl } />
+				{/* This is safe because previewMarkup comes from our API endpoint */}
+					{/* are you sure that makes it safe? */}
+				<div className="embed__preview" dangerouslySetInnerHTML={ { __html: this.state.previewMarkup[ this.state.previewUrl ] } } />
+
+
+				{/*
+				html should be safe, but really wanna put it inside sandboxed iframe just to be cautious
+
+				<iframe className="embed__preview" srcdoc={ this.state.previewMarkup[ this.state.previewUrl ] } />
+				can't set iframe content inside tag, have to use srcdoc attribute, but react strips it out or something?
+				have to set it via js like ResizableIframe does?
+				maybe try again to just use EmbedView, even if you have to modify it to accept a url prop or something
+
+				sandbox everything except allow-scripts?
+
+				figure out better way than dangerouslysetinnerhtml?
+				should put it inside an iframe
+				can maybe use EmbedView but not EmbedViewManager?
+				get security review
+				*/}
 			</Dialog>
 		);
 
 		{/*
-			saw some situations when switching between embeds where the url was correct when opening the dialog, but the preview was the previous video
-				open first embed, change url to https://www.youtube.com/watch?v=ghrL82cc-ss, update
-				open second embed, it'll show videopress url, but https://www.youtube.com/watch?v=ghrL82cc-ss as the preview
-				might only happen w/ the focus bug, or some other conditions, but test for this once other things are working
-
 			do we have any non-video embeds? if so, test those too
 
 			exception thrown when change it twice in a row. - only in FF
