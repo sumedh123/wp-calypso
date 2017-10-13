@@ -15,11 +15,7 @@ import CompactCard from 'components/card/compact';
 import QuerySitePlans from 'components/data/query-site-plans';
 import { getSitePlanSlug } from 'state/sites/selectors';
 import { getSelectedSiteId } from 'state/ui/selectors';
-import {
-	PLAN_JETPACK_PERSONAL,
-	PLAN_JETPACK_PREMIUM,
-	PLAN_JETPACK_BUSINESS,
-} from 'lib/plans/constants';
+import { getPlanClass } from 'lib/plans/constants';
 
 const TooDifficult = ( { confirmHref, features, siteId, translate } ) => (
 	<div>
@@ -39,8 +35,10 @@ export default localize(
 	connect( ( state, { translate } ) => {
 		const siteId = getSelectedSiteId( state );
 		const planSlug = getSitePlanSlug( state, siteId );
+		const planClass = getPlanClass( planSlug );
+
 		const features = {
-			[ PLAN_JETPACK_PERSONAL ]: {
+			'is-personal-plan': {
 				backups: translate( 'Backups' ),
 				antispam: translate( 'Antispam' ),
 				stats: translate( 'Stats' ),
@@ -48,7 +46,7 @@ export default localize(
 				subscriptions: translate( 'Subscriptions' ),
 				other: translate( 'Other' ),
 			},
-			[ PLAN_JETPACK_PREMIUM ]: {
+			'is-premium-plan': {
 				backups: translate( 'Backups' ),
 				security: translate( 'Security Scanning' ),
 				antispam: translate( 'Antispam' ),
@@ -57,7 +55,7 @@ export default localize(
 				subscriptions: translate( 'Subscriptions' ),
 				other: translate( 'Other' ),
 			},
-			[ PLAN_JETPACK_BUSINESS ]: {
+			'is-business-plan': {
 				backups: translate( 'Backups' ),
 				security: translate( 'Security Scanning' ),
 				antispam: translate( 'Antispam' ),
@@ -69,7 +67,7 @@ export default localize(
 		};
 
 		return {
-			features: get( features, planSlug ),
+			features: get( features, planClass ),
 			siteId,
 		};
 	} )( TooDifficult )
